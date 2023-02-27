@@ -22,63 +22,109 @@ import org.sunso.statemachine.response.Response;
 
 @Service
 public class BillStateMachineService implements InitializingBean {
-
     @Override
     public void afterPropertiesSet() throws Exception {
+        //状态机流程定义
         StateMachineBootstrap builder = StateMachineBootstrap.create();
         // 创建账单
-        builder.newTransfer().source(BillState.CREATE_BILL).target(BillState.CREATE_BILL)
-                .event(BillEvent.CREATE_BILL_EVENT).check(BillChecks.getBillCreateCheck())
-                .prepare(BillPrepares.getBillCreatePrepareList()).action(BillActions.getBillCreateAction()).builder();
+        builder.newTransfer()
+                .source(BillState.CREATE_BILL)
+                .target(BillState.CREATE_BILL)
+                .event(BillEvent.CREATE_BILL_EVENT)
+                .check(BillChecks.getBillCreateCheck())
+                .prepare(BillPrepares.getBillCreatePrepareList())
+                .action(BillActions.getBillCreateAction())
+                .builder();
 
         // 放款动作
-        builder.newTransfer().source(BillState.CREATE_BILL).target(BillState.LENDING).event(BillEvent.LEND_EVENT)
-                .check(BillChecks.getBillLendCheck()).prepare(BillPrepares.getBillLendPrepareList())
-                .action(BillActions.getBillLendAction()).builder();
+        builder.newTransfer()
+                .source(BillState.CREATE_BILL)
+                .target(BillState.LENDING)
+                .event(BillEvent.LEND_EVENT)
+                .check(BillChecks.getBillLendCheck())
+                .prepare(BillPrepares.getBillLendPrepareList())
+                .action(BillActions.getBillLendAction())
+                .builder();
 
         // 放款失败
-        builder.newTransfer().source(BillState.LENDING).target(BillState.LENDING_FAIL).event(BillEvent.LEND_FAIL_EVENT)
-                .check(BillChecks.getBillLendFailCheck()).prepare(BillPrepares.getBillLendFailPrepareList())
-                .action(BillActions.getBillLendFailAction()).builder();
+        builder.newTransfer()
+                .source(BillState.LENDING)
+                .target(BillState.LENDING_FAIL)
+                .event(BillEvent.LEND_FAIL_EVENT)
+                .check(BillChecks.getBillLendFailCheck())
+                .prepare(BillPrepares.getBillLendFailPrepareList())
+                .action(BillActions.getBillLendFailAction())
+                .builder();
 
         // 放款成功
-        builder.newTransfer().source(BillState.LENDING).target(BillState.REPAY_PROCESS)
-                .event(BillEvent.LEND_SUCCESS_EVENT).check(BillChecks.getBillLendSuccessCheck())
-                .prepare(BillPrepares.getBillLendSuccessPrepareList()).action(BillActions.getBillLendSuccessAction())
+        builder.newTransfer()
+                .source(BillState.LENDING)
+                .target(BillState.REPAY_PROCESS)
+                .event(BillEvent.LEND_SUCCESS_EVENT)
+                .check(BillChecks.getBillLendSuccessCheck())
+                .prepare(BillPrepares.getBillLendSuccessPrepareList())
+                .action(BillActions.getBillLendSuccessAction())
                 .builder();
 
         // 还款
-        builder.newTransfers().source(BillState.repay()).target(BillState.REPAY_PROCESS).event(BillEvent.REPAY_EVENT)
-                .check(BillChecks.getBillRepayCheck()).prepare(BillPrepares.getBillRepayPrepareList())
-                .action(BillActions.getBillRepayAction()).builder();
+        builder.newTransfers()
+                .source(BillState.repay())
+                .target(BillState.REPAY_PROCESS)
+                .event(BillEvent.REPAY_EVENT)
+                .check(BillChecks.getBillRepayCheck())
+                .prepare(BillPrepares.getBillRepayPrepareList())
+                .action(BillActions.getBillRepayAction())
+                .builder();
 
         // 逾期
-        builder.newTransfers().source(BillState.repay()).target(BillState.OVERDUE).event(BillEvent.OVERDUE_EVENT)
-                .check(BillChecks.getBillOverdueCheck()).prepare(BillPrepares.getBillOverduePrepareList())
-                .action(BillActions.getBillOverdueAction()).builder();
+        builder.newTransfers()
+                .source(BillState.repay())
+                .target(BillState.OVERDUE)
+                .event(BillEvent.OVERDUE_EVENT)
+                .check(BillChecks.getBillOverdueCheck())
+                .prepare(BillPrepares.getBillOverduePrepareList())
+                .action(BillActions.getBillOverdueAction())
+                .builder();
 
         // 正常结清
-        builder.newTransfer().source(BillState.REPAY_PROCESS).target(BillState.NORMAL_SETTLE)
-                .event(BillEvent.NORMAL_SETTLE_EVENT).check(BillChecks.getBillNormalSettleCheck())
-                .prepare(BillPrepares.getBillNormalSettlePrepareList()).action(BillActions.getBillNormalSettleAction())
+        builder.newTransfer()
+                .source(BillState.REPAY_PROCESS)
+                .target(BillState.NORMAL_SETTLE)
+                .event(BillEvent.NORMAL_SETTLE_EVENT)
+                .check(BillChecks.getBillNormalSettleCheck())
+                .prepare(BillPrepares.getBillNormalSettlePrepareList())
+                .action(BillActions.getBillNormalSettleAction())
                 .builder();
 
         // 逾期结清
-        builder.newTransfer().source(BillState.OVERDUE).target(BillState.OVERDUE_SETTLE)
-                .event(BillEvent.OVERDUE_SETTLE_EVENT).check(BillChecks.getBillOverdueSettleCheck())
+        builder.newTransfer()
+                .source(BillState.OVERDUE)
+                .target(BillState.OVERDUE_SETTLE)
+                .event(BillEvent.OVERDUE_SETTLE_EVENT)
+                .check(BillChecks.getBillOverdueSettleCheck())
                 .prepare(BillPrepares.getBillOverdueSettlePrepareList())
-                .action(BillActions.getBillOverdueSettleAction()).builder();
+                .action(BillActions.getBillOverdueSettleAction())
+                .builder();
 
         // 展期结清
-        builder.newTransfers().source(BillState.extendSettle()).target(BillState.EXTENSION_SETTLE)
-                .event(BillEvent.EXTENSION_SETTLE_EVENT).check(BillChecks.getBillExtendSettleCheck())
-                .prepare(BillPrepares.getBillExtendSettlePrepareList()).action(BillActions.getBillExtendSettleAction())
+        builder.newTransfers()
+                .source(BillState.extendSettle())
+                .target(BillState.EXTENSION_SETTLE)
+                .event(BillEvent.EXTENSION_SETTLE_EVENT)
+                .check(BillChecks.getBillExtendSettleCheck())
+                .prepare(BillPrepares.getBillExtendSettlePrepareList())
+                .action(BillActions.getBillExtendSettleAction())
                 .builder();
 
         // 账单关闭
-        builder.newTransfers().source(BillState.values()) // BillState.notContainClosed()
-                .target(BillState.CLOSED).event(BillEvent.CLOSED_EVENT).check(BillChecks.getBillClosedCheck())
-                .prepare(BillPrepares.getBillClosedPrepareList()).action(BillActions.getBillClosedAction()).builder();
+        builder.newTransfers()
+                .source(BillState.values()) // BillState.notContainClosed()
+                .target(BillState.CLOSED)
+                .event(BillEvent.CLOSED_EVENT)
+                .check(BillChecks.getBillClosedCheck())
+                .prepare(BillPrepares.getBillClosedPrepareList()).
+                action(BillActions.getBillClosedAction())
+                .builder();
 
         builder.builder(BillStateMachineId.billStateMachine);
     }

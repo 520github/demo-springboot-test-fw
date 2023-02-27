@@ -16,8 +16,11 @@ public class PerfMapServiceTest extends BaseSpringBootTest {
     @Test
     public void putMapTest() {
         BenchmarkRequest request = AsyncBenchmarkBootstrap.create()
-                .setStatisticsExecuteService(Executors.newFixedThreadPool(1)).setTotalProcessingNum(1000)
-                .setTotalThreadNum(5).setRemark("put map test").setRunnable(() -> {
+                .setStatisticsExecuteService(Executors.newFixedThreadPool(1))
+                .setTotalProcessingNum(1000)
+                .setTotalThreadNum(5)
+                .setRemark("put map test")
+                .setRunnable(() -> {
                     perfMapService.putMap(100, 10000000);
                 }).run();
         Assert.assertNotNull(request.getReportList());
