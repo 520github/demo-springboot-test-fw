@@ -13,9 +13,18 @@ import java.util.List;
  */
 @Data
 public class FetchDownloadDataPacketInfoResponse {
+    private static boolean reportBizLog = true;// 是否上报业务日志
     //private DownloadDataPackageInfo data;
     private DownloadDataPackageTotal total;
     private List<DownloadDataPackageFileItem> fileList;
+
+    public static boolean fetchReportBizLog() {
+        return reportBizLog;
+    }
+
+    public static void putReportBizLog(boolean reportBizLog) {
+        FetchDownloadDataPacketInfoResponse.reportBizLog = reportBizLog;
+    }
 
     @Data
     public static class DownloadDataPackageInfo {
@@ -26,6 +35,7 @@ public class FetchDownloadDataPacketInfoResponse {
     // Inner class Total
     @Data
     public static class DownloadDataPackageTotal {
+        private boolean reportBizLog;// 是否上报业务日志
         private String dataEnv; // 数据环境
         private String dataVersion; // 数据包版本号
         private String listDataType; // 数据业务类型

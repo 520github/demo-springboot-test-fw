@@ -82,19 +82,20 @@ public class DownloadController {
 
     private File getFile(String filePath) {
         log.info("File path: " + filePath);
-        if ("D-1".equals(filePath)) {
-            return new File("/Users/sunso520/home/tmp/editor.zip");
-        }
-        if ("D-2".equals(filePath)) {
-            return new File("/Users/sunso520/home/tmp/metaMask.zip");
-        }
-        if ("F-1".equals(filePath)) {
-            return new File("/Users/sunso520/home/tmp/yxh.zip");
-        }
-        if ("F-2".equals(filePath)) {
-            return new File("/Users/sunso520/home/tmp/sublime.zip");
-        }
-        return new File("/Users/sunso520/home/tmp/第一章.docx");
+//        if ("D-1".equals(filePath)) {
+//            return new File("/Users/sunso520/home/tmp/editor.zip");
+//        }
+//        if ("D-2".equals(filePath)) {
+//            return new File("/Users/sunso520/home/tmp/metaMask.zip");
+//        }
+//        if ("F-1".equals(filePath)) {
+//            return new File("/Users/sunso520/home/tmp/prod_v3_DD_OBLIST_CATEGORY_CODE_aes_count_20250319.zip");
+//        }
+//        if ("F-2".equals(filePath)) {
+//            return new File("/Users/sunso520/home/tmp/prod_v3_DD_OBLIST_D_aes_count_20250319_3_20003.zip");
+//        }
+//        return new File("/Users/sunso520/home/tmp/第一章.docx");
+        return new File("/Users/sunso520/home/tmp/" + getFilePath(filePath));
     }
 
     private ResponseEntity downloadFile(File file) {
@@ -144,6 +145,7 @@ public class DownloadController {
 
     private FetchDownloadDataPacketInfoResponse.DownloadDataPackageTotal getTotal(FetchDownloadDataPacketInfoRequest request) {
         FetchDownloadDataPacketInfoResponse.DownloadDataPackageTotal total = new FetchDownloadDataPacketInfoResponse.DownloadDataPackageTotal();
+        total.setReportBizLog(FetchDownloadDataPacketInfoResponse.fetchReportBizLog());
         total.setDataEnv(request.getDataEnv());
         total.setDataVersion(request.getDataVersion());
         total.setListDataType(request.getListDataType());
@@ -167,7 +169,7 @@ public class DownloadController {
     private FetchDownloadDataPacketInfoResponse.DownloadDataPackageFileItem getFileItem() {
         FetchDownloadDataPacketInfoResponse.DownloadDataPackageFileItem fileItem = new FetchDownloadDataPacketInfoResponse.DownloadDataPackageFileItem();
         fileItem.setDataPkPathMd5("D-1");
-        fileItem.setDataPkName("editor.zip");
+        fileItem.setDataPkName(getFilePath(fileItem.getDataPkPathMd5()));
         fileItem.setDataPkSize(fileItem.fetchDataPkSize());
         fileItem.setDataPkMd5(fileItem.fetchDataPkMd5());
         fileItem.setDataPkCount(100);
@@ -179,7 +181,7 @@ public class DownloadController {
     private FetchDownloadDataPacketInfoResponse.DownloadDataPackageFileItem getFileItem2() {
         FetchDownloadDataPacketInfoResponse.DownloadDataPackageFileItem fileItem = new FetchDownloadDataPacketInfoResponse.DownloadDataPackageFileItem();
         fileItem.setDataPkPathMd5("D-2");
-        fileItem.setDataPkName("metaMask.zip");
+        fileItem.setDataPkName(getFilePath(fileItem.getDataPkPathMd5()));
         fileItem.setDataPkSize(fileItem.fetchDataPkSize());
         fileItem.setDataPkMd5(fileItem.fetchDataPkMd5());
         fileItem.setDataPkCount(200);
@@ -199,25 +201,43 @@ public class DownloadController {
     private FetchDownloadDataPacketInfoResponse.DownloadDataPackageFileItem getAllFileItem() {
         FetchDownloadDataPacketInfoResponse.DownloadDataPackageFileItem fileItem = new FetchDownloadDataPacketInfoResponse.DownloadDataPackageFileItem();
         fileItem.setDataPkPathMd5("F-1");
-        fileItem.setDataPkName("yxh.zip");
+        //fileItem.setDataPkName("prod_v3_DD_OBLIST_CATEGORY_CODE_aes_count_20250319.zip");
+        fileItem.setDataPkName(getFilePath(fileItem.getDataPkPathMd5()));
         fileItem.setDataPkSize(fileItem.fetchDataPkSize());
         fileItem.setDataPkMd5(fileItem.fetchDataPkMd5());
-        fileItem.setDataPkCount(1000);
+        fileItem.setDataPkCount(96);
         fileItem.setDataPkSort(1000);
-        fileItem.setDataRange("1-1000");
+        fileItem.setDataRange("1-96");
         return fileItem;
     }
 
     private FetchDownloadDataPacketInfoResponse.DownloadDataPackageFileItem getAllFileItem2() {
         FetchDownloadDataPacketInfoResponse.DownloadDataPackageFileItem fileItem = new FetchDownloadDataPacketInfoResponse.DownloadDataPackageFileItem();
         fileItem.setDataPkPathMd5("F-2");
-        fileItem.setDataPkName("sublime.zip");
+        fileItem.setDataPkName(getFilePath(fileItem.getDataPkPathMd5()));
         fileItem.setDataPkSize(fileItem.fetchDataPkSize());
         fileItem.setDataPkMd5(fileItem.fetchDataPkMd5());
-        fileItem.setDataPkCount(2000);
+        fileItem.setDataPkCount(20000);
         fileItem.setDataPkSort(2000);
-        fileItem.setDataRange("1001-2000");
+        fileItem.setDataRange("1-20000");
         return fileItem;
+    }
+
+    private String getFilePath(String pathMd5) {
+        if ("F-1".equals(pathMd5)) {
+            return "prod_v3_DD_OBLIST_F_aes_count_20250413_7000003_8000003.zip";
+        }
+        if ("F-2".equals(pathMd5)) {
+            return "prod_v3_DD_OBLIST_D_aes_count_20250319_3_20003.zip";
+        }
+        if ("D-1".equals(pathMd5)) {
+            return "editor.zip";
+        }
+        if ("D-2".equals(pathMd5)) {
+            return "metaMask.zip";
+        }
+        return null;
+        //return "prod_v3_DD_OBLIST_D_aes_count_20250319_3_20003.zip";
     }
 
 
