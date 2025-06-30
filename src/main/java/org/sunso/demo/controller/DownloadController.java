@@ -40,6 +40,9 @@ public class DownloadController {
             , @RequestHeader(value = "organkey", required = false) String organKey                          ) {
         request.setOrganKey(organKey);
         log.info("fetchDownloadDataPacketInfo [{}], organKey[{}]", request, organKey);
+//        if (request.getDataDt().length() > 10) {
+//            return ResData.error("E10001", "小时包暂时没有生成");
+//        }
         return ResData.success(getResponse(request));
     }
 
@@ -50,6 +53,9 @@ public class DownloadController {
         request.setRange(range);
         request.setOrganKey(organKey);
         log.info("downloadFile [{}], organKey[{}]", request, organKey);
+//        if (request.getDataDt().length() <= 10) {
+//            return badRequestResponseEntity();
+//        }
 
         return downloadDataPacket(request);
         //return badRequestResponseEntity();
@@ -58,7 +64,7 @@ public class DownloadController {
     private ResponseEntity badRequestResponseEntity() {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                 .header(HttpHeaders.CONTENT_TYPE, "application/json;charset=utf-8")
-                .body(ResData.success("成功了"))
+                .body(ResData.success("小时数据包还没有准备好"))
                 ;
     }
 
@@ -231,10 +237,12 @@ public class DownloadController {
             return "prod_v3_DD_OBLIST_D_aes_count_20250319_3_20003.zip";
         }
         if ("D-1".equals(pathMd5)) {
-            return "editor.zip";
+            //return "editor.zip";
+            return "prod_v3_DD_OBLIST_IO_CODE_D_aes_all_20250319.zip";
         }
         if ("D-2".equals(pathMd5)) {
-            return "metaMask.zip";
+            //return "metaMask.zip";
+            return "prod_v3_DD_OBLIST_KEYWORD_D_aes_all_20250319.zip";
         }
         return null;
         //return "prod_v3_DD_OBLIST_D_aes_count_20250319_3_20003.zip";
