@@ -106,9 +106,11 @@ public class DownloadController {
 
     private ResponseEntity downloadFile(File file) {
         return ResponseEntity.ok()
-                .header(HttpHeaders.CONTENT_TYPE, "application/octet-stream")
+                //.header(HttpHeaders.CONTENT_TYPE, "application/octet-stream")
+                .header("content-type", "application/octet-stream")
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + file.getName())
-                .header(HttpHeaders.CONTENT_LENGTH, String.valueOf(file.length()))
+                //.header(HttpHeaders.CONTENT_LENGTH, String.valueOf(file.length()))
+                .header("content-length",String.valueOf(file.length()))
                 .body(new FileSystemResource(file))
                 ;
     }
